@@ -415,7 +415,11 @@ class VMWareConfig(ConfigBase):
                          The same behavior also applies for VM disk sizes.""",
                          default_value=True
                          ),
-
+            ConfigOption("vm_tags_category_prefix",
+                         bool,
+                         description="""Prefixes the category name to the tag name when syncing vCenter tags to NetBox.""",
+                         default_value=True
+                         ),
             # removed settings
             ConfigOption("netbox_host_device_role",
                          str,

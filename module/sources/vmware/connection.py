@@ -683,11 +683,26 @@ class VMWareHandler(SourceBase):
                 try:
                     tag_name = self.tag_session.tagging.Tag.get(tag_id).name
                     tag_description = self.tag_session.tagging.Tag.get(tag_id).description
+
+                    category_name = "UnknownCategory"
+                    try:
+                        category_id = self.tag_session.tagging.Tag.get(tag_id).category_id
+                        category_info = self.tag_session.tagging.Category.get(category_id)
+                        category_name = category_info.name
+                    except Exception as cat_exc:
+                        log.warning(f"Could not retrieve category for tag '{tag_name}' on '{obj.name}': {cat_exc}")
+
                 except Exception as e:
                     log.error(f"Unable to retrieve vCenter tag '{tag_id}' for '{obj.name}': {e}")
                     continue
 
+                # noinspection PyBroadException
+
+
                 if tag_name is not None:
+
+                    if self.settings.vm_tags_category_prefix:
+                        tag_name = f"{category_name}:{tag_name}"
 
                     if tag_description is not None and len(f"{tag_description}") > 0:
                         tag_description = f"{primary_tag_name}: {tag_description}"
